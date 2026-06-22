@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAVvLIŃSKI | Fotografia</title>
+  <meta name="description" content="Profesjonalna fotografia — eventy, portret, produkt, ulica. Poznań i okolice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="images/cloud.jpg">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAVvLINSKI | Fotografia</title>
-<meta name="description" content="Profesjonalna fotografia — eventy, portret, produkt, ulica. Poznań i okolice.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -223,6 +223,12 @@
   /* O MNIE */
   #about {
     position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 2;
   }
   .about-bg {
@@ -233,71 +239,33 @@
     z-index: 0;
     will-change: transform;
   }
-  .about-content {
-    will-change: transform, opacity;
-  }
-
-  /* PORTFOLIO */
-  #portfolio {
-    position: relative;
+  .about-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
     z-index: 1;
-    width: 100vw;
-    background: #ffffff;
-    padding: 24px 0;
-    will-change: transform;
   }
-  .portfolio-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    width: 100%;
-    padding: 0 32px;
-    margin-bottom: 16px;
-    box-sizing: border-box;
-  }
-  .portfolio-row:last-child { margin-bottom: 0; }
-  .portfolio-bar {
+  .about-content {
+    position: relative;
+    z-index: 2;
+    text-align: right;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 0 24px 0;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-right: 5%;
+    gap: 12px;
+    width: 100%;
     will-change: transform, opacity;
   }
-  .portfolio-tile {
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    display: block;
-    aspect-ratio: 3/2;
-    border-radius: 1px;
-  }
-  .tile-bg {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.6s ease, filter 0.6s ease;
-    filter: brightness(0.85);
-  }
-  .portfolio-tile:hover .tile-bg {
-    transform: scale(1.05);
-    filter: brightness(0.65);
-  }
-  .tile-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    padding: 20px;
-    background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
-  }
-  .tile-title {
+  .about-title {
     font-family: 'Lato', sans-serif;
-    font-size: clamp(13px, 1.2vw, 18px);
-    font-weight: 300;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-size: clamp(48px, 8vw, 140px);
+    font-weight: 100;
+    line-height: 1;
+    letter-spacing: 0.30em;
+    text-indent: 0.30em;
     color: #ffffff;
+    text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
   }
 
   /* ANIMATIONS */
@@ -316,10 +284,6 @@
     #hero { padding: 0; justify-content: center; align-items: center; }
     .hero-title { letter-spacing: 0.1em; font-size: clamp(29px, 10.8vw, 72px); font-weight: 300 !important; }
     .hero-tag { letter-spacing: 0.25em; font-size: 14px; }
-    #portfolio { padding: 16px 0; }
-    .portfolio-row { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 16px; }
-    .portfolio-tile { aspect-ratio: 2/3; }
-    .portfolio-bar { padding: 12px 0 18px 0; }
   }
 </style>
 </head>
@@ -327,7 +291,6 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#portfolio" onclick="smoothScroll(event,'portfolio');closeMobile()">Portfolio</a>
   <a href="#about" onclick="smoothScroll(event,'about');closeMobile()">O mnie</a>
   <a href="#contact" onclick="smoothScroll(event,'contact');closeMobile()">Kontakt</a>
 </div>
@@ -336,7 +299,6 @@
 <nav id="nav">
   <a href="#hero" class="nav-logo">PAvVLIŃSKI</a>
   <ul class="nav-links">
-    <li><a href="#portfolio" onclick="smoothScroll(event,'portfolio')">Portfolio</a></li>
     <li><a href="#about" onclick="smoothScroll(event,'about')">O mnie</a></li>
     <li class="nav-cta-wrap"><a href="#contact" onclick="smoothScroll(event,'contact')" class="nav-cta">Kontakt</a></li>
   </ul>
@@ -348,12 +310,12 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-slides">
-<div class="hero-slide" style="background-image: url('images/cloud.jpg')"></div>
-<div class="hero-slide" style="background-image: url('images/flamengo.jpg')"></div>
-<div class="hero-slide" style="background-image: url('images/trawa.jpg')"></div>
-<div class="hero-slide" style="background-image: url('images/tatry.jpg')"></div>
-<div class="hero-slide" style="background-image: url('images/lightrays.jpg')"></div>
-<div class="hero-slide" style="background-image: url('images/gym.jpg')"></div>
+    <div class="hero-slide active" style="background-image: url('images/cloud.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('images/flamengo.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('images/trawa.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('images/tatry.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('images/lightrays.jpg')"></div>
+    <div class="hero-slide" style="background-image: url('images/gym.jpg')"></div>
   </div>
   <div class="hero-content">
     <h1 class="hero-title">PAvVLIŃSKI</h1>
@@ -363,89 +325,17 @@
   <button class="hero-arrow hero-arrow-right" id="heroNext" aria-label="Następne zdjęcie">&#9654;</button>
 </section>
 
-<!-- O MNIE (wyłączone)
-<section id="about" style="
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-">
-  <div class="about-bg" style="background-image: url('images/pawlinski2.png');"></div>
-  <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.35); z-index: 1;"></div>
-  <div class="about-content" style="
-    position: relative;
-    z-index: 2;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding-right: 5%;
-    gap: 12px;
-    width: 100%;
-  ">
-    <h2 style="
-      font-family: 'Lato', sans-serif;
-      font-size: clamp(48px, 8vw, 140px);
-      font-weight: 100;
-      line-height: 1;
-      letter-spacing: 0.30em;
-      text-indent: 0.30em;
-      color: #ffffff;
-      text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
-    ">O MNIE</h2>
-  </div>
-</section>
--->
-
-<!-- PORTFOLIO -->
-<section id="portfolio">
-  <div class="portfolio-bar">
-    <h2 style="
-      font-family: 'Lato', sans-serif;
-      font-size: clamp(48px, 8vw, 140px);
-      font-weight: 100;
-      letter-spacing: 0.30em;
-      text-indent: 0.30em;
-      color: #111111;
-      text-shadow: none;
-    ">PORTFOLIO</h2>
-  </div>
-
-  <div class="portfolio-row">
-    <a href="galeria.html?id=ludzie" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/ludzie/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Ludzie</span></div>
-    </a>
-    <a href="galeria.html?id=brand" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/brand/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Brand & Product</span></div>
-    </a>
-    <a href="galeria.html?id=eventy" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/eventy/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Eventy</span></div>
-    </a>
-  </div>
-
-  <div class="portfolio-row">
-    <a href="galeria.html?id=celebracje" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/celebracje/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Celebracje</span></div>
-    </a>
-    <a href="galeria.html?id=pogodzinach" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/pogodzinach/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Po godzinach</span></div>
-    </a>
-    <a href="galeria.html?id=biznes" class="portfolio-tile">
-      <div class="tile-bg" style="background-image: url('images/portfolio/biznes/thumbnail-2.jpg')"></div>
-      <div class="tile-overlay"><span class="tile-title">Biznes</span></div>
-    </a>
+<!-- O MNIE -->
+<section id="about">
+  <div class="about-bg" style="background-image: url('images/pawlinski2.jpg');"></div>
+  <div class="about-overlay"></div>
+  <div class="about-content">
+    <h2 class="about-title">O MNIE</h2>
   </div>
 </section>
 
 <script>
-  // SLIDESHOW
+  // SLIDESHOW — pierwszy slajd ma klasę active już w HTML, więc zero czarnego ekranu
   const slides = document.querySelectorAll('.hero-slide');
   let currentSlide = 0;
   const SLIDE_DURATION = 5000;
@@ -496,7 +386,7 @@
     requestAnimationFrame(step);
   }
 
-  // Hero content - fadeUp wejście
+  // Hero content — fadeUp przy wejściu
   const heroContent = document.querySelector('.hero-content');
   heroContent.style.opacity = '0';
   heroContent.style.transform = 'translateY(30px)';
@@ -507,16 +397,9 @@
     setTimeout(() => { heroContent.style.transition = 'none'; }, 1000);
   }, 500);
 
-  // Portfolio bar - ukryj na start
-  const portfolioBar = document.querySelector('.portfolio-bar');
-  if (portfolioBar) {
-    portfolioBar.style.opacity = '0';
-    portfolioBar.style.transform = 'translateY(40px)';
-  }
-
   // Referencje
   const aboutBg = document.querySelector('.about-bg');
-  const portfolioEl = document.getElementById('portfolio');
+  const aboutContent = document.querySelector('.about-content');
   const nav = document.getElementById('nav');
   let ticking = false;
 
@@ -529,38 +412,17 @@
         // Nav
         nav.classList.toggle('scrolled', scrollY > 60);
 
-        // Hero parallax logo - zanika i przesuwa się w górę
+        // Hero parallax logo — zanika i przesuwa się w górę
         const heroH = document.getElementById('hero').offsetHeight;
         const progress = scrollY / (heroH * 0.45);
         heroContent.style.opacity = Math.max(0, 1 - progress);
         heroContent.style.transform = `translateY(${scrollY * 0.55}px)`;
 
-        // O mnie tło parallax
+        // O mnie — tło parallax
         if (aboutBg) {
           const aboutRect = document.getElementById('about').getBoundingClientRect();
           if (aboutRect.bottom > 0 && aboutRect.top < window.innerHeight) {
             aboutBg.style.transform = `translateY(${(-aboutRect.top) * 0.3}px)`;
-          }
-        }
-
-        // Portfolio parallax sekcji
-        if (portfolioEl) {
-          const portfolioRect = portfolioEl.getBoundingClientRect();
-          if (portfolioRect.top < window.innerHeight && portfolioRect.bottom > 0) {
-            const offset = (portfolioRect.top - window.innerHeight) * 0.18;
-            portfolioEl.style.transform = `translateY(${offset}px)`;
-          }
-        }
-
-        // Portfolio bar - odwrotnie niż hero: pojawia się z dołu i wjeżdża w górę
-        if (portfolioBar) {
-          const barRect = portfolioBar.getBoundingClientRect();
-          const viewH = window.innerHeight;
-          if (barRect.top < viewH && barRect.bottom > 0) {
-            // progress: 0 gdy wchodzi od dołu → 1 gdy jest w centrum
-            const prog = Math.max(0, Math.min(1, (viewH - barRect.top) / (viewH * 0.5)));
-            portfolioBar.style.opacity = prog;
-            portfolioBar.style.transform = `translateY(${(1 - prog) * 40}px)`;
           }
         }
 
@@ -579,21 +441,6 @@
         if (aboutRect.bottom > 0 && aboutRect.top < window.innerHeight) {
           aboutBg.style.transform = `translateY(${(-aboutRect.top) * 0.3}px)`;
         }
-      }
-    }
-    if (portfolioEl) {
-      const portfolioRect = portfolioEl.getBoundingClientRect();
-      if (portfolioRect.top < window.innerHeight && portfolioRect.bottom > 0) {
-        portfolioEl.style.transform = `translateY(${(portfolioRect.top - window.innerHeight) * 0.18}px)`;
-      }
-    }
-    if (portfolioBar) {
-      const barRect = portfolioBar.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      if (barRect.top < viewH && barRect.bottom > 0) {
-        const prog = Math.max(0, Math.min(1, (viewH - barRect.top) / (viewH * 0.5)));
-        portfolioBar.style.opacity = prog;
-        portfolioBar.style.transform = `translateY(${(1 - prog) * 40}px)`;
       }
     }
   }, { passive: true });
