@@ -138,15 +138,16 @@
 
   /* HERO */
   #hero {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100vw;
     height: 100vh;
     height: 100svh;
-    min-height: -webkit-fill-available;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 4;
   }
   .hero-slides {
     position: absolute;
@@ -257,7 +258,8 @@
 
   /* O MNIE */
   #about {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -280,7 +282,8 @@
 
   /* PORTFOLIO */
   #portfolio {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
@@ -292,7 +295,8 @@
 
   /* KONTAKT */
   #contact {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100vw;
     height: 100vh;
     background: #080808;
@@ -343,6 +347,9 @@
   </button>
 </nav>
 
+<!-- WRAPPER sticky sections -->
+<div style="position: relative;">
+
 <!-- HERO -->
 <section id="hero">
   <div class="hero-slides">
@@ -385,6 +392,8 @@
     <h2 class="section-title">KONTAKT</h2>
   </div>
 </section>
+
+</div><!-- koniec wrappera -->
 
 <script>
   // SLIDESHOW
@@ -450,11 +459,11 @@
   }, 500);
 
   // Referencje
-  const aboutBg    = document.querySelector('#about .section-bg');
+  const aboutBg      = document.querySelector('#about .section-bg');
   const aboutContent = document.querySelector('.about-content');
-  const portfolioBg = document.querySelector('#portfolio .section-bg');
+  const portfolioBg  = document.querySelector('#portfolio .section-bg');
   const portfolioContent = document.querySelector('#portfolio .section-content');
-  const contactContent = document.querySelector('#contact .section-content');
+  const contactContent   = document.querySelector('#contact .section-content');
   const nav = document.getElementById('nav');
   let ticking = false;
 
