@@ -297,7 +297,7 @@
 
   /* KONTAKT */
   #contact {
-    position: sticky;
+    position: relative;
     top: 0;
     width: 100vw;
     height: 100vh;
@@ -464,7 +464,8 @@
   const aboutContent    = document.querySelector('.about-content');
   const portfolioBg     = document.querySelector('#portfolio .section-bg');
   const portfolioContent= document.querySelector('#portfolio .section-content');
-  const contactContent  = document.querySelector('#contact .section-content');
+  const contactBg      = document.querySelector('#contact .section-bg');
+  const contactContent = document.querySelector('#contact .section-content');
   const nav = document.getElementById('nav');
   let ticking = false;
 
@@ -501,16 +502,18 @@
       }
     }
 
-    // Kontakt
-    if (contactContent) {
-      const r = document.getElementById('contact').getBoundingClientRect();
-      if (r.bottom > 0 && r.top < vH) {
-        const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
-        contactContent.style.opacity = prog;
-        contactContent.style.transform = `translateY(${r.top * 0.25}px)`;
-      }
-    }
+    // Kontakt — zoom out
+if (contactBg) {
+  const r = document.getElementById('contact').getBoundingClientRect();
+  if (r.bottom > 0 && r.top < vH) {
+    const progress = Math.max(0, Math.min(1, r.top / vH));
+    const scale = 1 + progress * 0.35;
+    contactBg.style.transform = `scale(${scale})`;
+    const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
+    contactContent.style.opacity = prog;
+    contactContent.style.transform = `translateY(${r.top * 0.25}px)`;
   }
+}
 
   window.addEventListener('scroll', () => {
     if (!ticking) {
