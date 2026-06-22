@@ -136,13 +136,20 @@
   }
   .mobile-menu a:hover { color: var(--gold); }
 
-  /* SEKCJE — sticky stack */
+  /* STACK — sekcje sticky */
   .stack-wrap {
     position: relative;
     isolation: isolate;
   }
 
-  /* HERO */
+  /*
+   * Z-INDEX HIERARCHY:
+   * Hero (40) i Portfolio (40) są NAD sekcjami 2 i 4
+   * About (20) i Contact (10) przesuwają się pod nimi
+   * Portfolio (późniejszy w DOM) przykrywa Hero gdy oba sticky
+   */
+
+  /* HERO — sekcja 1, scrolluje normalnie jako foreground */
   #hero {
     position: sticky;
     top: 0;
@@ -226,7 +233,7 @@
   .hero-arrow-left { left: 12px; }
   .hero-arrow-right { right: 12px; }
 
-  /* WSPÓLNE STYLE SEKCJI */
+  /* WSPÓLNE STYLE TŁA I TREŚCI */
   .section-bg {
     position: absolute;
     inset: -30% 0;
@@ -259,7 +266,7 @@
     text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
   }
 
-  /* O MNIE */
+  /* O MNIE — sekcja 2, przesuwa się POD Hero */
   #about {
     position: sticky;
     top: 0;
@@ -269,7 +276,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 30;
+    z-index: 20; /* niższy niż Hero(40) i Portfolio(40) */
   }
   .about-content {
     position: relative;
@@ -282,7 +289,7 @@
     width: 100%;
   }
 
-  /* PORTFOLIO */
+  /* PORTFOLIO — sekcja 3, scrolluje normalnie jako foreground */
   #portfolio {
     position: sticky;
     top: 0;
@@ -292,20 +299,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 20;
+    z-index: 40; /* równy Hero, ale późniejszy w DOM więc na wierzchu */
   }
 
-  /* KONTAKT */
+  /* KONTAKT — sekcja 4, przesuwa się POD Portfolio */
   #contact {
-    position: relative;
+    position: sticky;
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: #080808;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 10; /* najniższy — pod wszystkim */
   }
 
   @keyframes fadeUp {
@@ -350,7 +357,7 @@
 
 <div class="stack-wrap">
 
-  <!-- HERO -->
+  <!-- HERO — sekcja 1 -->
   <section id="hero">
     <div class="hero-slides">
       <div class="hero-slide active" style="background-image: url('images/cloud.jpg')"></div>
@@ -368,7 +375,7 @@
     <button class="hero-arrow hero-arrow-right" id="heroNext" aria-label="Następne">&#9654;</button>
   </section>
 
-  <!-- O MNIE -->
+  <!-- O MNIE — sekcja 2, pod Hero -->
   <section id="about">
     <div class="section-bg" style="background-image: url('images/pawlinski2.jpg');"></div>
     <div class="section-overlay"></div>
@@ -377,7 +384,7 @@
     </div>
   </section>
 
-  <!-- PORTFOLIO -->
+  <!-- PORTFOLIO — sekcja 3, nad About -->
   <section id="portfolio">
     <div class="section-bg" style="background-image: url('images/portfolio2.jpg');"></div>
     <div class="section-overlay"></div>
@@ -386,19 +393,19 @@
     </div>
   </section>
 
-<!-- KONTAKT -->
-<section id="contact">
-  <div class="section-bg" style="background-image: url('images/kontakt.jpg');"></div>
-  <div class="section-overlay"></div>
-  <div class="section-content">
-    <h2 class="section-title">KONTAKT</h2>
-  </div>
-</section>
+  <!-- KONTAKT — sekcja 4, pod Portfolio -->
+  <section id="contact">
+    <div class="section-bg" style="background-image: url('images/kontakt.jpg');"></div>
+    <div class="section-overlay"></div>
+    <div class="section-content">
+      <h2 class="section-title">KONTAKT</h2>
+    </div>
+  </section>
 
 </div>
 
 <script>
-  // SLIDESHOW
+  // ─── SLIDESHOW ───────────────────────────────────────────────
   const slides = document.querySelectorAll('.hero-slide');
   let currentSlide = 0;
   const SLIDE_DURATION = 5000;
@@ -420,15 +427,17 @@
   document.getElementById('heroNext').addEventListener('click', () => { nextSlide(); resetTimer(); });
   document.getElementById('heroPrev').addEventListener('click', () => { prevSlide(); resetTimer(); });
 
+  // Swipe
   let touchStartX = 0;
-  const heroEl = document.getElementById('hero');
-  heroEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  heroEl.addEventListener('touchend', e => {
+  document.getElementById('hero').addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('hero').addEventListener('touchend', e => {
     const diff = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); resetTimer(); }
   }, { passive: true });
 
-  // Smooth scroll
+  // ─── SMOOTH SCROLL ───────────────────────────────────────────
   function smoothScroll(e, id) {
     e.preventDefault();
     const target = document.getElementById(id);
@@ -448,7 +457,7 @@
     requestAnimationFrame(step);
   }
 
-  // Hero fadeUp
+  // ─── HERO FADEUP ─────────────────────────────────────────────
   const heroContent = document.querySelector('.hero-content');
   heroContent.style.opacity = '0';
   heroContent.style.transform = 'translateY(30px)';
@@ -459,39 +468,44 @@
     setTimeout(() => { heroContent.style.transition = 'none'; }, 1000);
   }, 500);
 
-  // Referencje
+  // ─── REFERENCJE DO ELEMENTÓW ─────────────────────────────────
+  const nav             = document.getElementById('nav');
   const aboutBg         = document.querySelector('#about .section-bg');
   const aboutContent    = document.querySelector('.about-content');
   const portfolioBg     = document.querySelector('#portfolio .section-bg');
   const portfolioContent= document.querySelector('#portfolio .section-content');
-  const contactBg      = document.querySelector('#contact .section-bg');
-  const contactContent = document.querySelector('#contact .section-content');
-  const nav = document.getElementById('nav');
+  const contactBg       = document.querySelector('#contact .section-bg');
+  const contactContent  = document.querySelector('#contact .section-content');
+
+  // ─── PARALLAX — jeden zoptymalizowany listener ───────────────
   let ticking = false;
 
   function updateParallax() {
     const scrollY = window.scrollY;
     const vH = window.innerHeight;
 
+    // Nav
     nav.classList.toggle('scrolled', scrollY > 60);
 
-    // Hero logo
+    // Hero logo — zanika i unosi się podczas scrolla
     const heroH = document.getElementById('hero').offsetHeight;
     heroContent.style.opacity = Math.max(0, 1 - scrollY / (heroH * 0.45));
     heroContent.style.transform = `translateY(${scrollY * 0.55}px)`;
 
-    // O mnie
+    // O mnie (sekcja 2) — tło paralaksa + fadeup treści
     if (aboutBg) {
       const r = document.getElementById('about').getBoundingClientRect();
       if (r.bottom > 0 && r.top < vH) {
+        // Tło przesuwa się wolniej niż scroll — efekt głębi
         aboutBg.style.transform = `translateY(${(-r.top) * 0.3}px)`;
+        // Treść pojawia się i zanika przy wjeździe/wyjeździe
         const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
         aboutContent.style.opacity = prog;
         aboutContent.style.transform = `translateY(${r.top * 0.25}px)`;
       }
     }
 
-    // Portfolio
+    // Portfolio (sekcja 3) — tło paralaksa + fadeup treści
     if (portfolioBg) {
       const r = document.getElementById('portfolio').getBoundingClientRect();
       if (r.bottom > 0 && r.top < vH) {
@@ -502,34 +516,43 @@
       }
     }
 
-    // Kontakt — zoom out
-if (contactBg) {
-  const r = document.getElementById('contact').getBoundingClientRect();
-  if (r.bottom > 0 && r.top < vH) {
-    const progress = Math.max(0, Math.min(1, r.top / vH));
-    const scale = 1 + progress * 0.35;
-    contactBg.style.transform = `scale(${scale})`;
-    const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
-    contactContent.style.opacity = prog;
-    contactContent.style.transform = `translateY(${r.top * 0.25}px)`;
-  }
-}
+    // Kontakt (sekcja 4) — zoom-out przy wjeździe + fadeup treści
+    if (contactBg) {
+      const r = document.getElementById('contact').getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vH) {
+        const progress = Math.max(0, Math.min(1, r.top / vH));
+        const scale = 1 + progress * 0.25;
+        contactBg.style.transform = `scale(${scale})`;
+        const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
+        contactContent.style.opacity = prog;
+        contactContent.style.transform = `translateY(${r.top * 0.25}px)`;
+      }
+    }
+  } // ← koniec updateParallax()
 
+  // Scroll listener (pojedynczy, poza funkcją updateParallax)
   window.addEventListener('scroll', () => {
     if (!ticking) {
-      requestAnimationFrame(() => { updateParallax(); ticking = false; });
+      requestAnimationFrame(() => {
+        updateParallax();
+        ticking = false;
+      });
       ticking = true;
     }
   }, { passive: true });
 
+  // Touch scroll (mobile)
   document.addEventListener('touchmove', () => {
     if (!ticking) {
-      requestAnimationFrame(() => { updateParallax(); ticking = false; });
+      requestAnimationFrame(() => {
+        updateParallax();
+        ticking = false;
+      });
       ticking = true;
     }
   }, { passive: true });
 
-  // Mobile menu
+  // ─── MOBILE MENU ─────────────────────────────────────────────
   function toggleMobile() {
     document.getElementById('mobileMenu').classList.toggle('open');
     document.getElementById('hamburger').classList.toggle('open');
