@@ -483,6 +483,7 @@
         const opacity = Math.max(0, 1 - fadeProgress * 1.4);
         portfolioContent.style.opacity = opacity;
         portfolioContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
+        portfolioBg.style.transform = `translate3d(0, ${progress * vH * 0.15}px, 0)`;
       }
     }
 
