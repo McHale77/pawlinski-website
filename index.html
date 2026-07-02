@@ -478,17 +478,16 @@ function smoothScroll(e, id) {
     }
 
     // ── PORTFOLIO (sekcja 2) ──
-    // Aktywna w zakresie 2×vh → 3×vh
-    {
-      const localScroll = scrollY - vH * 2;
-      const progress = Math.max(-1, Math.min(1, localScroll / vH));
-      if (progress > -1 && progress < 1) {
-        const fadeProgress = Math.abs(progress);
-        const opacity = Math.max(0, 1 - fadeProgress * 0.8);
-        portfolioContent.style.opacity = opacity;
-        portfolioContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
-      }
-    }
+{
+  const localScroll = scrollY - vH * 2;
+  const progress = Math.max(-1, Math.min(1, localScroll / vH));
+  if (progress > -1 && progress < 1) {
+    const fadeProgress = Math.abs(progress);
+    const opacity = Math.max(0, 1 - fadeProgress * 0.8);
+    portfolioContent.style.opacity = opacity;
+    portfolioContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
+  }
+}
 
     // ── KONTAKT (sekcja 3) ──
     // Aktywna w zakresie 3×vh → 4×vh
