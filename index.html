@@ -406,24 +406,31 @@
   }, { passive: true });
 
   // ─── SMOOTH SCROLL ───────────────────────────────────────────
-  function smoothScroll(e, id) {
-    e.preventDefault();
-    const target = document.getElementById(id);
-    if (!target) return;
-    const start = window.scrollY;
-    const end = target.getBoundingClientRect().top + window.scrollY;
-    const distance = end - start;
-    const duration = 2000;
-    let startTime = null;
-    function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-    function step(ts) {
-      if (!startTime) startTime = ts;
-      const p = Math.min((ts - startTime) / duration, 1);
-      window.scrollTo(0, start + distance * ease(p));
-      if (p < 1) requestAnimationFrame(step);
+function smoothScroll(e, id) {
+  e.preventDefault();
+  const target = document.getElementById(id);
+  if (!target) return;
+  // Wyłączamy natywny smooth scroll żeby nie kolidował
+  document.documentElement.style.scrollBehavior = 'auto';
+  const start = window.scrollY;
+  const end = target.getBoundingClientRect().top + window.scrollY;
+  const distance = end - start;
+  const duration = 1000;
+  let startTime = null;
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    const p = Math.min((ts - startTime) / duration, 1);
+    window.scrollTo(0, start + distance * ease(p));
+    if (p < 1) {
+      requestAnimationFrame(step);
+    } else {
+      // Przywracamy natywny smooth scroll po animacji
+      document.documentElement.style.scrollBehavior = '';
     }
-    requestAnimationFrame(step);
   }
+  requestAnimationFrame(step);
+}
 
   // ─── REFERENCJE ──────────────────────────────────────────────
   const nav              = document.getElementById('nav');
