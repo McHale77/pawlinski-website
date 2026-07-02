@@ -484,7 +484,7 @@ function smoothScroll(e, id) {
       const progress = Math.max(-1, Math.min(1, localScroll / vH));
       if (progress > -1 && progress < 1) {
         const fadeProgress = Math.abs(progress);
-        const opacity = Math.max(0, 1 - fadeProgress * 1.4);
+        const opacity = Math.max(0, 1 - fadeProgress * 0.8);
         portfolioContent.style.opacity = opacity;
         portfolioContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
       }
