@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PAvVLIŃSKI | Fotografia</title>
+  <title>PAVvLIŃSKI | Fotografia</title>
   <meta name="description" content="Profesjonalna fotografia — eventy, portret, produkt, ulica. Poznań i okolice.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +20,7 @@
   }
 
   html { scroll-behavior: smooth; overflow-x: hidden; }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -30,7 +31,7 @@
     max-width: 100vw;
   }
 
-  /* ================ NAVIGATION ================ */
+  /* NAVIGATION */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -55,7 +56,11 @@
     color: var(--text);
     text-decoration: none;
   }
-  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
   .nav-links a {
     color: #ffffff;
     text-decoration: none;
@@ -114,7 +119,11 @@
     transform: translateY(-20px);
     transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
   }
-  .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
   .mobile-menu a {
     font-family: 'Lato', sans-serif;
     font-size: 20px;
@@ -127,19 +136,21 @@
   }
   .mobile-menu a:hover { color: var(--gold); }
 
-  /* ================ STACK ARCHITECTURE ================
-     KAŻDA sekcja jest sticky top:0 i wypełnia 100vh.
-     Wszystkie mają to samo top, więc nakładają się.
-     Stacking wymuszamy przez z-index, treść animujemy w JS.
-  ================================================ */
+  /* STACK — sekcje sticky */
   .stack-wrap {
     position: relative;
     isolation: isolate;
-    /* WYSOKOŚĆ = liczba sekcji × 100vh. 4 sekcje = 400vh */
-    height: 400vh;
   }
 
-  .stack-section {
+  /*
+   * Z-INDEX HIERARCHY:
+   * Hero (40) i Portfolio (40) są NAD sekcjami 2 i 4
+   * About (20) i Contact (10) przesuwają się pod nimi
+   * Portfolio (późniejszy w DOM) przykrywa Hero gdy oba sticky
+   */
+
+  /* HERO — sekcja 1, scrolluje normalnie jako foreground */
+  #hero {
     position: sticky;
     top: 0;
     width: 100vw;
@@ -149,30 +160,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* WAŻNE: GPU acceleration */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    z-index: 40;
   }
-
-  /* Z-INDEX:
-     Hero (40) i Portfolio (40) są ZAWSZE na wierzchu.
-     About (20) i Contact (10) wychodzą spod nich. */
-  #hero      { z-index: 40; }
-  #about     { z-index: 20; }
-  #portfolio { z-index: 30; }   /* nad About */
-  #contact   { z-index: 10; }   /* pod wszystkim */
-
-  /* Pełnoekranowe ciemne tło zabezpieczające — każda sekcja ma swoje */
-  .section-fallback-bg {
+  .hero-slides {
     position: absolute;
     inset: 0;
-    background: #080808;
-    z-index: -1;
+    z-index: 0;
   }
-
-  /* ================ HERO ================ */
-  .hero-slides { position: absolute; inset: 0; z-index: 0; }
   .hero-slide {
     position: absolute;
     inset: 0;
@@ -181,7 +175,6 @@
     background-repeat: no-repeat;
     opacity: 0;
     transition: opacity 1.5s ease-in-out;
-    will-change: opacity;
   }
   .hero-slide.active { opacity: 1; }
   .hero-slide::after {
@@ -198,7 +191,6 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    will-change: transform, opacity;
   }
   .hero-title {
     font-family: 'Lato', sans-serif;
@@ -208,7 +200,7 @@
     letter-spacing: 0.30em;
     color: #ffffff;
     text-indent: 0.30em;
-    text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 0px 0px 0px rgba(0,0,0,0.6);
   }
   .hero-tag {
     font-family: 'Lato', sans-serif;
@@ -218,7 +210,7 @@
     color: rgba(255,255,255,0.85);
     font-weight: 300;
     text-indent: 2.3em;
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.5);
+    text-shadow: 0.7px 0.7px 0px rgba(0,0,0,0.5);
   }
   .hero-arrow {
     position: absolute;
@@ -241,19 +233,19 @@
   .hero-arrow-left { left: 12px; }
   .hero-arrow-right { right: 12px; }
 
-  /* ================ WSPÓLNE STYLE TŁA I TYTUŁU ================ */
+  /* WSPÓLNE STYLE TŁA I TREŚCI */
   .section-bg {
     position: absolute;
-    inset: 0;
+    inset: -30% 0;
     background-size: cover;
     background-position: center center;
-    will-change: transform;
-    transform: translate3d(0,0,0);
+    z-index: 0;
   }
   .section-overlay {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.35);
+    z-index: 1;
   }
   .section-content {
     position: relative;
@@ -262,8 +254,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    will-change: transform, opacity;
-    transform: translate3d(0,0,0);
   }
   .section-title {
     font-family: 'Lato', sans-serif;
@@ -276,12 +266,58 @@
     text-shadow: 0px 2px 4px rgba(0,0,0,0.5);
   }
 
-  /* O MNIE — tytuł po prawej */
+  /* O MNIE — sekcja 2, przesuwa się POD Hero */
+  #about {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20; /* niższy niż Hero(40) i Portfolio(40) */
+  }
   .about-content {
+    position: relative;
+    z-index: 2;
     text-align: right;
+    display: flex;
+    flex-direction: column;
     align-items: flex-end;
     padding-right: 5%;
     width: 100%;
+  }
+
+  /* PORTFOLIO — sekcja 3, scrolluje normalnie jako foreground */
+  #portfolio {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 40; /* równy Hero, ale późniejszy w DOM więc na wierzchu */
+  }
+
+  /* KONTAKT — sekcja 4, przesuwa się POD Portfolio */
+  #contact {
+    position: sticky;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* najniższy — pod wszystkim */
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   /* RESPONSIVE */
@@ -291,10 +327,9 @@
     nav { padding: 20px 24px; }
     nav.scrolled { padding: 14px 24px; }
     .nav-logo { font-size: 13px !important; }
+    #hero { padding: 0; justify-content: center; align-items: center; }
     .hero-title { letter-spacing: 0.1em; font-size: clamp(29px, 10.8vw, 72px); font-weight: 300 !important; }
     .hero-tag { letter-spacing: 0.25em; font-size: 14px; }
-    .section-title { letter-spacing: 0.1em; font-size: clamp(29px, 10.8vw, 72px); }
-    .about-content { padding-right: 5%; }
   }
 </style>
 </head>
@@ -323,8 +358,7 @@
 <div class="stack-wrap">
 
   <!-- HERO — sekcja 1 -->
-  <section id="hero" class="stack-section">
-    <div class="section-fallback-bg"></div>
+  <section id="hero">
     <div class="hero-slides">
       <div class="hero-slide active" style="background-image: url('images/cloud.jpg')"></div>
       <div class="hero-slide" style="background-image: url('images/flamengo.jpg')"></div>
@@ -333,7 +367,7 @@
       <div class="hero-slide" style="background-image: url('images/lightrays.jpg')"></div>
       <div class="hero-slide" style="background-image: url('images/gym.jpg')"></div>
     </div>
-    <div class="hero-content" id="heroContent">
+    <div class="hero-content">
       <h1 class="hero-title">PAvVLIŃSKI</h1>
       <p class="hero-tag">Fotografia</p>
     </div>
@@ -341,32 +375,29 @@
     <button class="hero-arrow hero-arrow-right" id="heroNext" aria-label="Następne">&#9654;</button>
   </section>
 
-  <!-- O MNIE — sekcja 2, pod Hero i Portfolio -->
-  <section id="about" class="stack-section">
-    <div class="section-fallback-bg"></div>
-    <div class="section-bg" id="aboutBg" style="background-image: url('images/pawlinski2.jpg');"></div>
+  <!-- O MNIE — sekcja 2, pod Hero -->
+  <section id="about">
+    <div class="section-bg" style="background-image: url('images/pawlinski2.jpg');"></div>
     <div class="section-overlay"></div>
-    <div class="section-content about-content" id="aboutContent">
+    <div class="about-content">
       <h2 class="section-title">O MNIE</h2>
     </div>
   </section>
 
   <!-- PORTFOLIO — sekcja 3, nad About -->
-  <section id="portfolio" class="stack-section">
-    <div class="section-fallback-bg"></div>
-    <div class="section-bg" id="portfolioBg" style="background-image: url('images/portfolio2.jpg');"></div>
+  <section id="portfolio">
+    <div class="section-bg" style="background-image: url('images/portfolio2.jpg');"></div>
     <div class="section-overlay"></div>
-    <div class="section-content" id="portfolioContent">
+    <div class="section-content">
       <h2 class="section-title">PORTFOLIO</h2>
     </div>
   </section>
 
-  <!-- KONTAKT — sekcja 4, pod wszystkim -->
-  <section id="contact" class="stack-section">
-    <div class="section-fallback-bg"></div>
-    <div class="section-bg" id="contactBg" style="background-image: url('images/kontakt.jpg');"></div>
+  <!-- KONTAKT — sekcja 4, pod Portfolio -->
+  <section id="contact">
+    <div class="section-bg" style="background-image: url('images/kontakt.jpg');"></div>
     <div class="section-overlay"></div>
-    <div class="section-content" id="contactContent">
+    <div class="section-content">
       <h2 class="section-title">KONTAKT</h2>
     </div>
   </section>
@@ -398,9 +429,10 @@
 
   // Swipe
   let touchStartX = 0;
-  const heroEl = document.getElementById('hero');
-  heroEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  heroEl.addEventListener('touchend', e => {
+  document.getElementById('hero').addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('hero').addEventListener('touchend', e => {
     const diff = touchStartX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); resetTimer(); }
   }, { passive: true });
@@ -413,7 +445,7 @@
     const start = window.scrollY;
     const end = target.getBoundingClientRect().top + window.scrollY;
     const distance = end - start;
-    const duration = 2000;
+    const duration = 2400;
     let startTime = null;
     function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
     function step(ts) {
@@ -425,18 +457,27 @@
     requestAnimationFrame(step);
   }
 
-  // ─── REFERENCJE ──────────────────────────────────────────────
-  const nav              = document.getElementById('nav');
-  const heroContent      = document.getElementById('heroContent');
-  const aboutBg          = document.getElementById('aboutBg');
-  const aboutContent     = document.getElementById('aboutContent');
-  const portfolioBg      = document.getElementById('portfolioBg');
-  const portfolioContent = document.getElementById('portfolioContent');
-  const contactBg        = document.getElementById('contactBg');
-  const contactContent   = document.getElementById('contactContent');
+  // ─── HERO FADEUP ─────────────────────────────────────────────
+  const heroContent = document.querySelector('.hero-content');
+  heroContent.style.opacity = '0';
+  heroContent.style.transform = 'translateY(30px)';
+  setTimeout(() => {
+    heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
+    heroContent.style.opacity = '1';
+    heroContent.style.transform = 'translateY(0px)';
+    setTimeout(() => { heroContent.style.transition = 'none'; }, 1000);
+  }, 500);
 
-  // Indeksy sekcji w stack (0=hero, 1=about, 2=portfolio, 3=contact)
-  // Każda sekcja "aktywuje się" gdy scrollY przekracza jej_indeks * vh
+  // ─── REFERENCJE DO ELEMENTÓW ─────────────────────────────────
+  const nav             = document.getElementById('nav');
+  const aboutBg         = document.querySelector('#about .section-bg');
+  const aboutContent    = document.querySelector('.about-content');
+  const portfolioBg     = document.querySelector('#portfolio .section-bg');
+  const portfolioContent= document.querySelector('#portfolio .section-content');
+  const contactBg       = document.querySelector('#contact .section-bg');
+  const contactContent  = document.querySelector('#contact .section-content');
+
+  // ─── PARALLAX — jeden zoptymalizowany listener ───────────────
   let ticking = false;
 
   function updateParallax() {
@@ -446,99 +487,67 @@
     // Nav
     nav.classList.toggle('scrolled', scrollY > 60);
 
-    // ── HERO (sekcja 0) ──
-    // Aktywna w zakresie 0 → 1×vh
-    // progress 0 = na wierzchu, 1 = za chwilę zniknie
-    {
-      const progress = Math.min(1, scrollY / vH);
-      // Tytuł: paralaksa wolniejsza niż scroll + zanika
-      heroContent.style.opacity = 1 - progress * 1.4;
-      heroContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
-    }
+    // Hero logo — zanika i unosi się podczas scrolla
+    const heroH = document.getElementById('hero').offsetHeight;
+    heroContent.style.opacity = Math.max(0, 1 - scrollY / (heroH * 0.45));
+    heroContent.style.transform = `translateY(${scrollY * 0.55}px)`;
 
-    // ── ABOUT (sekcja 1) ──
-    // Aktywna w zakresie 1×vh → 2×vh
-    {
-      const localScroll = scrollY - vH;
-      const progress = Math.max(-1, Math.min(1, localScroll / vH));
-      // Tytuł porusza się paralaksą (wolniej niż scroll) i zanika
-      // Przy progress = -1 jeszcze ukryty pod hero, =0 w środku, =1 wychodzi
-      if (progress > -1 && progress < 1) {
-        const fadeProgress = Math.abs(progress);
-        const opacity = Math.max(0, 1 - fadeProgress * 1.4);
-        aboutContent.style.opacity = opacity;
-        aboutContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
-        // Tło paralaksą wolniej
-        aboutBg.style.transform = `translate3d(0, ${progress * vH * 0.15}px, 0)`;
+    // O mnie (sekcja 2) — tło paralaksa + fadeup treści
+    if (aboutBg) {
+      const r = document.getElementById('about').getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vH) {
+        // Tło przesuwa się wolniej niż scroll — efekt głębi
+        aboutBg.style.transform = `translateY(${(-r.top) * 0.3}px)`;
+        // Treść pojawia się i zanika przy wjeździe/wyjeździe
+        const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
+        aboutContent.style.opacity = prog;
+        aboutContent.style.transform = `translateY(${r.top * 0.25}px)`;
       }
     }
 
-    // ── PORTFOLIO (sekcja 2) ──
-    // Aktywna w zakresie 2×vh → 3×vh
-    {
-      const localScroll = scrollY - vH * 2;
-      const progress = Math.max(-1, Math.min(1, localScroll / vH));
-      if (progress > -1 && progress < 1) {
-        const fadeProgress = Math.abs(progress);
-        const opacity = Math.max(0, 1 - fadeProgress * 1.4);
-        portfolioContent.style.opacity = opacity;
-        portfolioContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
-        portfolioBg.style.transform = `translate3d(0, ${progress * vH * 0.15}px, 0)`;
+    // Portfolio (sekcja 3) — tło paralaksa + fadeup treści
+    if (portfolioBg) {
+      const r = document.getElementById('portfolio').getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vH) {
+        portfolioBg.style.transform = `translateY(${(-r.top) * 0.3}px)`;
+        const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
+        portfolioContent.style.opacity = prog;
+        portfolioContent.style.transform = `translateY(${r.top * 0.25}px)`;
       }
     }
 
-    // ── KONTAKT (sekcja 3) ──
-    // Aktywna w zakresie 3×vh → 4×vh
-    {
-      const localScroll = scrollY - vH * 3;
-      const progress = Math.max(-1, Math.min(1, localScroll / vH));
-      if (progress > -1 && progress < 1) {
-        const fadeProgress = Math.abs(progress);
-        const opacity = Math.max(0, 1 - fadeProgress * 1.4);
-        contactContent.style.opacity = opacity;
-        contactContent.style.transform = `translate3d(0, ${progress * vH * 0.4}px, 0)`;
-        contactBg.style.transform = `translate3d(0, ${progress * vH * 0.15}px, 0)`;
+    // Kontakt (sekcja 4) — zoom-out przy wjeździe + fadeup treści
+    if (contactBg) {
+      const r = document.getElementById('contact').getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vH) {
+        const progress = Math.max(0, Math.min(1, r.top / vH));
+        const scale = 1 + progress * 0.25;
+        contactBg.style.transform = `scale(${scale})`;
+        const prog = Math.max(0, 1 - Math.abs(r.top / vH) * 1.5);
+        contactContent.style.opacity = prog;
+        contactContent.style.transform = `translateY(${r.top * 0.25}px)`;
       }
     }
+  } // ← koniec updateParallax()
 
-    ticking = false;
-  }
-
-  // Inicjalizacja początkowych pozycji (żeby About/Portfolio/Contact nie pokazywały się przed scrollem)
-  function initParallax() {
-    aboutContent.style.opacity = '0';
-    aboutContent.style.transform = `translate3d(0, ${-window.innerHeight * 0.4}px, 0)`;
-    portfolioContent.style.opacity = '0';
-    portfolioContent.style.transform = `translate3d(0, ${-window.innerHeight * 0.4}px, 0)`;
-    contactContent.style.opacity = '0';
-    contactContent.style.transform = `translate3d(0, ${-window.innerHeight * 0.4}px, 0)`;
-    updateParallax();
-  }
-  initParallax();
-  window.addEventListener('resize', initParallax);
-
-  // Hero fadeUp przy starcie
-  heroContent.style.opacity = '0';
-  heroContent.style.transform = 'translate3d(0, 30px, 0)';
-  setTimeout(() => {
-    heroContent.style.transition = 'opacity 1s ease, transform 1s ease';
-    heroContent.style.opacity = '1';
-    heroContent.style.transform = 'translate3d(0, 0, 0)';
-    setTimeout(() => { heroContent.style.transition = 'none'; }, 1100);
-  }, 300);
-
-  // Scroll listener
+  // Scroll listener (pojedynczy, poza funkcją updateParallax)
   window.addEventListener('scroll', () => {
     if (!ticking) {
-      requestAnimationFrame(updateParallax);
+      requestAnimationFrame(() => {
+        updateParallax();
+        ticking = false;
+      });
       ticking = true;
     }
   }, { passive: true });
 
-  // Touch (mobile) — wymuś update także podczas touchmove
+  // Touch scroll (mobile)
   document.addEventListener('touchmove', () => {
     if (!ticking) {
-      requestAnimationFrame(updateParallax);
+      requestAnimationFrame(() => {
+        updateParallax();
+        ticking = false;
+      });
       ticking = true;
     }
   }, { passive: true });
